@@ -4,7 +4,7 @@ var router = express.Router();
 /* all product routes */
 
 router.get('/', function(req, res, next) {
-  res.send('products');
+  res.send('orders');
 });
 
 module.exports = router;

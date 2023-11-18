@@ -1,30 +1,45 @@
 var db = require('../../services/mysql');
 
-exports.getAllPoroducts = ()=>{
-    return [
-      {
-        id: '1',
-        name: 'Coke',
-        price: 20,
-        image:
-          'https://toppng.com/uploads/preview/coke-free-desktop-115385941292ptblrvxaz.png',
-        stock: 10,
-      },
-      {
-        id: '2',
-        name: 'Pepsi',
-        price: 25,
-        image:
-          'https://toppng.com/uploads/preview/pepsi-11538681711xinb1lyzap.png',
-        stock: 10,
-      },
-      {
-        id: '3',
-        name: 'Dew',
-        price: 30,
-        image:
-          'https://toppng.com/uploads/preview/mountain-dew-image-11526062217u23bq6aak8.png',
-        stock: 10,
-      },
-    ]
+exports.getAllPoroducts = (req,res,next)=>{
+    db.query("SELECT * FROM products").then(([rows,fields])=>{
+        res.status(200).send(rows);
+    }).catch((err)=>{
+      res.status(404).send(err.message)
+    });
 }
+exports.getProduct = (req,res,next)=>{
+    const {id} = req.params
+    const query = `
+      SELECT * FROM products WHERE id = ?
+    `
+    db.query(query,[id]).then(([rows,fields])=>{
+        res.status(200).send(rows);
+    }).catch((err)=>{
+      res.status(404).send(err.message)
+    });
+}
+exports.updateProduct = (req,res,next)=>{
+    const {id, quantity} = req.params
+    const query = `
+      UPDATE products SET quantity = ?
+      WHERE id = ?
+    `
+    db.query(query,[quantity, id]).then(([rows,fields])=>{
+        res.status(200).send(rows);
+    }).catch((err)=>{
+      res.status(404).send(err.message)
+    });
+}
+
+exports.deleteProduct  = (req,res,next)=>{
+    const {id} = req.params
+    const query = `
+      DELETE FROM products WHERE id = ?
+    `
+    db.query(query,[id]).then(([rows,fields])=>{
+        res.status(200).send('deleted');
+    }).catch((err)=>{
+      res.status(404).send(err.message)
+    });
+}
+
