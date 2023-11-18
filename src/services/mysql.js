@@ -8,4 +8,4 @@ var con = mysql.createPool({
     database: config.db.name
 }).promise();
         
-return con;
+module.exports =  con;
