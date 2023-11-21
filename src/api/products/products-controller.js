@@ -18,7 +18,18 @@ exports.getProduct = (req,res,next)=>{
       res.status(404).send(err.message)
     });
 }
-exports.updateProduct = (req,res,next)=>{
+exports.createProduct = (req,res,next)=>{
+    const {name, description, price} = req.params
+    const query = `
+      INSERT INTO product(name,description,price) values(?,?,?)
+    `
+    db.query(query,[name,description,price]).then(([rows,fields])=>{
+        res.status(201).send(rows);
+    }).catch((err)=>{
+      res.status(404).send(err.message)
+    });
+}
+exports.dispenceProduct = (req,res,next)=>{
     const {id, quantity} = req.params
     const query = `
       UPDATE products SET quantity = ?
@@ -37,7 +48,7 @@ exports.deleteProduct  = (req,res,next)=>{
       DELETE FROM products WHERE id = ?
     `
     db.query(query,[id]).then(([rows,fields])=>{
-        res.status(200).send('deleted');
+        res.status(201).send('deleted');
     }).catch((err)=>{
       res.status(404).send(err.message)
     });
